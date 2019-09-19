@@ -1,0 +1,45 @@
+# Edit in /ip hotspot user profile edit default on-login 
+
+:local nas [/system identity get name];
+
+:local today [/system clock get date];
+
+:local time1 [/system clock get time ];
+
+:local ipuser [/ip hotspot active get [find user=$user] address];
+
+:local usermac [/ip hotspot active get [find user=$user] mac-address]
+
+:put $today
+
+:put $time1
+
+:local hour [:pick $time1 0 2]; 
+
+:local min [:pick $time1 3 5]; 
+
+:local sec [:pick $time1 6 8];
+
+:set $time1 [:put ({hour} . {min} . {sec})] 
+
+:local mac1 [:pick $usermac 0 2];
+
+:local mac2 [:pick $usermac 3 5];
+
+:local mac3 [:pick $usermac 6 8];
+
+:local mac4 [:pick $usermac 9 11];
+
+:local mac5 [:pick $usermac 12 14];
+
+:local mac6 [:pick $usermac 15 17];
+
+:set $usermac [:put ({mac1} . {mac2} . {mac3} . {mac4} . {mac5} . {mac6})]
+
+:put $time1
+
+/ip firewall address-list add list=$today address="log-in.$time1.$user.$usermac.$ipuser"
+
+
+
+do {/tool e-mail send to="email@gmail.com" subject="Login number: $user on $nas" body="Login number: $user mac-address: $usermac time: $time1 ip-address: $ipuser"} on-error={};

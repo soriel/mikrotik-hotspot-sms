@@ -1,0 +1,15 @@
+/export compact file=auto_backup_user-manager;
+/system backup save name=auto_backup_user-manager.backup;
+:if ( [ /file find name=auto_backup_user-manager.umb ] != "" ) do={
+/file remove auto_backup_user-manager.umb;
+};
+/tool user-manager database save name=auto_backup_user-manager;
+/delay delay-time=60;
+
+
+/tool e-mail send to="email@gmail.com" subject=("Export Script User Manager ".[ /system clock get date ]." ".[ /system clock get time ]) file=auto_backup_user-manager.rsc;
+/delay delay-time=60;
+/tool e-mail send to="email@gmail.com" subject=("Backup Config User Manager ".[ /system clock get date ]." ".[ /system clock get time ]) file=auto_backup_user-manager.backup;
+/delay delay-time=60;
+/tool e-mail send to="email@gmail.com" subject=("Backup Database User Manager ".[ /system clock get date ]." ".[ /system clock get time ]) file=auto_backup_user-manager.umb;
+/delay delay-time=60;
