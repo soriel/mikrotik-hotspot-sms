@@ -1,0 +1,123 @@
+#Search number in log hotspot
+
+:foreach line in=[/log find buffer=hotspot message~"login failed"] do={
+ :do {:local content [/log get $line message];
+  :put $content;
+  :local pos1 [:find $content " (" 0];
+  :put $pos1;
+  :if ($pos1 != " ") do={ 
+   :local uname ""; 
+   :local uname7 "";
+   :local uname8 "";
+   :local uname9 "";
+   :local phone ""; 
+   :if ([:pick $content ($pos1-11)] = "8") do={ 
+    :set uname [:pick $content ($pos1-10) ($pos1-0)];  
+    :put $uname;
+    :set uname7 [:put ("7" . {$uname})]
+    :set uname8 [:put ("8" . {$uname})]
+    :put $uname7
+    :put $uname8
+    #Password generation 
+    :local date [/system clock get time]; 
+    :local hour [:pick $date 0 2]; 
+    :local min [:pick $date 3 5]; 
+    :local sec [:pick $date 6 8]; 
+    :local usernumber [:pick $content ($pos1-7) ($pos1-5)];
+    :put $usernumber;
+    :global pass 27394; 
+    :set pass ($hour * $min * $sec - $usernumber); 
+    :if ($pass = 0) do={ 
+     :set pass 6524;
+     }
+    :put $pass;
+    #Add user to hotspot / user-manager 
+
+    do {/ip hotspot user add name=$uname} on-error={};
+    do {/ip hotspot user set password=$pass numbers=[find name=$uname]} on-error={};
+    do {/tool user-manager user add username=$uname password=$pass customer=admin copy-from=test disabled=no phone=$uname;} on-error={};
+    do {/tool user-manager user set password=$pass number=[find username=$uname]} on-error={}; 
+    ##SMS.ru
+    #do {/tool fetch url="http://sms.ru/sms/send?api_id=!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!&to=$uname&text=$pass"} on-error={}; 
+    do {/tool fetch url="https://gate.smsaero.ru/send/\?user=info@1.ru&password=1212121212das&to=$uname7&text=password+$pass&from=name=Asterconf"} on-error={};
+    do {/tool sms send usb1 phone-number="$uname7" message="login $uname password $pass"} on-error={};
+    #Email
+    do {/tool e-mail send to="email@gmail.com" subject="Login $uname password $pass" body="Login $uname password $pass"} on-error={};    
+    }
+   :if ([:pick $content ($pos1-10)] = "9") do={ 
+    :set uname [:pick $content ($pos1-10) ($pos1-0)];  
+    :put $uname;
+    :set uname7 [:put ("7" . {$uname})]
+    :set uname8 [:put ("8" . {$uname})]
+    :put $uname7
+    :put $uname8
+    #Password generation 
+    :local date [/system clock get time]; 
+    :local hour [:pick $date 0 2]; 
+    :local min [:pick $date 3 5]; 
+    :local sec [:pick $date 6 8]; 
+    :local usernumber [:pick $content ($pos1-7) ($pos1-5)];
+    :put $usernumber;
+    :global pass 27394; 
+    :set pass ($hour * $min * $sec - $usernumber); 
+    :if ($pass = 0) do={ 
+     :set pass 6524;
+     }
+    :put $pass;
+    #Add user to hotspot / user-manager 
+
+    do {/ip hotspot user add name=$uname} on-error={};
+    do {/ip hotspot user set password=$pass numbers=[find name=$uname]} on-error={};
+    do {/tool user-manager user add username=$uname password=$pass customer=admin copy-from=test disabled=no phone=$uname7;} on-error={};
+    do {/tool user-manager user set password=$pass number=[find username=$uname]} on-error={}; 
+    ##SMS.ru
+    #do {/tool fetch url="http://sms.ru/sms/send?api_id=!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!&to=$uname&text=$pass"} on-error={}; 
+    do {/tool fetch url="https://gate.smsaero.ru/send/\?user=info@1.ru&password=1212121212das&to=$uname7&text=password+$pass&from=name"} on-error={};
+    do {/tool sms send usb1 phone-number="$uname7" message="login $uname password $pass"} on-error={};
+    #Email
+    do {/tool e-mail send to="email@gmail.com" subject="Login $uname password $pass" body="Login $uname password $pass"} on-error={};    
+    }
+
+   :if ([:pick $content ($pos1-11)] = "7") do={ 
+    :set uname [:pick $content ($pos1-10) ($pos1-0)];  
+    :put $uname;
+    :set uname7 [:put ("7" . {$uname})]
+    :set uname8 [:put ("8" . {$uname})]
+    :put $uname7
+    :put $uname8
+    #Password generation 
+    :local date [/system clock get time] 
+    :local hour [:pick $date 0 2] 
+    :local min [:pick $date 3 5] 
+    :local sec [:pick $date 6 8] 
+    :local usernumber [:pick $content ($pos1-7) ($pos1-4)];
+    :global pass 27394 
+    :set pass ($hour * $min * $sec - $usernumber) 
+    :if ($pass = 0) do={ 
+     :set pass 6524 
+     } 
+    :put $pass
+    #Add user to hotspot / user-manager 
+
+    do {/ip hotspot user add name=$uname} on-error={};
+    do {/ip hotspot user set password=$pass numbers=[find name=$uname]} on-error={};
+    do {/tool user-manager user add username=$uname password=$pass customer=admin copy-from=test disabled=no phone=$uname;} on-error={};
+    do {/tool user-manager user set password=$pass number=[find username=$uname]} on-error={};
+    ##SMS 
+    #do {/tool fetch url="http://sms.ru/sms/send?api_id=!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!&to=$uname&text=$pass"} on-error={}; 
+    do {/tool sms send usb1 phone-number="$uname7" message="login $uname password $pass"} on-error={};
+    do {/tool fetch url="https://gate.smsaero.ru/send/\?user=info@1.ru&password=1212121212das&to=$uname7&text=password+$pass&from=name=Asterconf"} on-error={};
+    #Email
+    do {/tool e-mail send to="email@gmail.com" subject="Login $uname password $pass" body="Login $uname password $pass"} on-error={};  
+
+    }
+  }
+ }
+}
+
+
+
+# Clear hostpot log
+
+/system logging action set hotspot memory-lines=1;
+/system logging action set hotspot memory-lines=1000;
