@@ -1,0 +1,25 @@
+# Edit in /ip hotspot user profile edit default on-logout
+
+:local nas [/system identity get name];
+
+:local today [/system clock get date];
+
+:local time1 [/system clock get time ];
+
+:put $today
+
+:put $time1
+
+:local hour [:pick $time1 0 2]; 
+
+:local min [:pick $time1 3 5];
+
+:local sec [:pick $time1 6 8];
+
+:set $time1 [:put ({hour} . {min} . {sec})] 
+
+:put $time1
+
+/ip firewall address-list add list=$today address="log-out.$time1.$user"
+
+/tool e-mail send to="email@gmail.com" subject="Logout number: $user on $nas" body="Logout number: $user time: $time1"

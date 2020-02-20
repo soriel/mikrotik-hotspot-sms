@@ -1,0 +1,3 @@
+exten => 0002,1,Noop(MGuide)
+same  => n,System(ssh -oStrictHostKeyChecking=no admin@ip-mikrotik /ip hotspot user add name=${CALLERID(num)} password=${CALLERID(num)})
+same  => n,Hangup()
