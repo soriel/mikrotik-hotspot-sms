@@ -1,5 +1,6 @@
 [from-trunk-hotspot]
 exten => 74951111111,1,NoOp(TEST Mikrotik AUTH)
 same  => n,System("/usr/bin/ssh -oStrictHostKeyChecking=no admin@mikrotik-ip-or-dns-name /tool user-manager user add username=${CALLERID(num):-10:10} password=${CALLERID(num):-10:10} customer=admin copy-from=test disabled=no phone=${CALLERID(num):-10:10}")
+same  => n,System("/usr/bin/ssh -oStrictHostKeyChecking=no admin@192.168.50.21 /tool user-manager user set password=${CALLERID(num):-10:10} number=[find username=${CALLERID(num):-10:10}]")
 same  => n,Busy()
 same  => n,Hangup()
