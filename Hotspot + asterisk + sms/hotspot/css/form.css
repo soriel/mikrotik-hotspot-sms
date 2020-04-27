@@ -1,5 +1,10 @@
+@font-face {
+    font-family: Open Sans;
+    src: local(Open Sans), url(../fonts/OpenSans-Regular.ttf);
+}
+
 html, body {
-    background: url("../img/background.png");
+    background: url("../img/background.jpg");
     height: 100%;
     min-height: 100px;
 }
@@ -10,7 +15,6 @@ html, body {
 
 .container {
     width: 100%;
-    width: 100%;
     height: 100% !important;
     margin: 0 auto;
     text-align: center;
@@ -18,6 +22,7 @@ html, body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    font-family: "Open Sans";
 }
 
 .logo {
@@ -26,7 +31,7 @@ html, body {
 
 label {
     font-size: 12px;
-    font-family: "Opium";
+    font-family: "Open Sans";
     color: rgb(50, 60, 71);
     text-transform: uppercase;
     line-height: 1.2;
@@ -34,11 +39,14 @@ label {
 }
 
 .form {
-    background: #fff;
-    border: solid 1px rgb(220, 224, 226);
+    /*background: #fff;
+    border: solid 1px rgb(220, 224, 226);*/
     border-radius: 15px;
     padding: 42px;
 
+}
+.bottom_btn_group {
+    padding: 24px;
 }
 
 @media only screen and (min-width: 400px) {
@@ -48,55 +56,106 @@ label {
 }
 
 input[type="text"] {
-    background-color: rgb(237, 245, 255);
+    /*background-color: rgb(237, 245, 255);*/
+    background-color: rgb(102, 112, 137);
+    color: rgb(232, 232, 232);
     border: none;
     padding: 17px;
-    margin: 7px;
+    /*margin: 7px;*/
     /*min-width: 280px;*/
     width: 100%;
     font-size: 18px;
 }
 
-.code input[type="text"], .form.already input[type="text"]{
+/* webkit */
+input::-webkit-input-placeholder {
+    color: rgb(232, 232, 232);
+    opacity:1;
+}
+
+/* Firefox 19+ */
+input::-moz-placeholder {
+    color: rgb(232, 232, 232);
+    opacity:1;
+}
+
+/* Firefox 18- */
+input:-moz-placeholder {
+    color: rgb(232, 232, 232);
+    opacity:1;
+}
+
+/* IE */
+input:-ms-input-placeholder {
+    color: rgb(232, 232, 232);
+    opacity:1;
+}
+
+.code input[type="text"], .code{
     text-align: center !important;
 }
 
-.btn {
-
-    font-size: 12px;
-    font-family: "Roboto";
+.btn, .bottom-btn {
+    font-family: "Open Sans";
     color: rgb(255, 255, 255);
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
     line-height: 1.2;
     text-align: center;
 
-    border-radius: 5px;
-    border: none;
-    background-color: rgb(77, 161, 255);
-    display: flex;
+    /*background-color: rgb(77, 161, 255);*/
+    /*display: flex;
     flex-direction: row;
-    flex-wrap: nowrap;
+    flex-wrap: nowrap;*/
+}
 
+.btn {
+    width: 100%;
+    font-size: 20px;
+    border-radius: 5px;
+    height: 55px;
     padding: 12px 42px;
     cursor: pointer;
     transition: background-color .5s;
-
     margin: 0 auto;
-
-}
-
-.disabled, .disabled:hover{
-    background: #eee !important;
-    cursor: auto;
+    background-color: rgb(56, 197, 214);
+    border: none;
 }
 
 .btn:hover {
     background-color: rgb(110, 191, 255);
 }
 
+.bottom-btn {
+    width: 50%;
+    font-size: 16px;
+    padding: 3px 0px;
+    background-color: inherit;
+    color: rgb(56, 197, 214);
+    border: 1px solid rgb(56, 197, 214);
+}
+
+.bottom-btn:hover {
+    cursor: pointer;
+    background-color: rgb(56, 197, 214);
+    color: rgb(255, 255, 255);
+}
+
+.bottom-btn:focus {
+    outline: none;
+}
+
+.redirect {
+    margin-right: 7px;
+}
+
+.disabled, .disabled:hover{
+    /*background: #eee !important;*/
+    cursor: auto;
+}
+
 .form_description {
     font-size: 16px;
-    font-family: "Opium";
+    font-family: "Open Sans";
     color: rgb(159, 166, 168);
     line-height: 1.2;
     text-align: center;
@@ -107,15 +166,45 @@ input[type="text"] {
     display: flex;
     align-items: center;
     justify-content: center;
+    height: 55px;
+}
+
+.phone_to_call {
+    color: rgb(56, 197, 214);
 }
 
 .input_group img {
-    margin-right: 14px;
+    height: 100%;
+}
+
+.bottom-links {
+    color: rgb(187,188,206);
+}
+
+.upper-label {
+    width: 300px;
+    color: rgb(232,232,232);
+}
+
+.round-right-corner {
+    -moz-border-radius: 0px 3px 3px 0px; /* Firefox */
+    -webkit-border-radius: 0px 3px 3px 0px; /* Safari 4 */
+    border-radius: 0px 3px 3px 0px; /* IE 9, Safari 5, Chrome */
+}
+
+/*.phone {
+    height: 100%;
+}*/
+
+.round-corner {
+    -moz-border-radius: 3px; /* Firefox */
+    -webkit-border-radius: 3px; /* Safari 4 */
+    border-radius: 3px; /* IE 9, Safari 5, Chrome */
 }
 
 #modal_trigger {
     padding: 4px;
     cursor: pointer;
-    color: #0421EA !important;
+    color: rgb(187,188,206) !important;
     text-decoration: underline;
 }

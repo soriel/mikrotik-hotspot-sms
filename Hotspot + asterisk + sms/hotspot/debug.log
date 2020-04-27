@@ -1,0 +1,4 @@
+[0413/220405.228:ERROR:file_io.cc(134)] WriteFile: Идет закрытие канала. (0xE8)
+[0413/222012.049:ERROR:file_io.cc(134)] WriteFile: Идет закрытие канала. (0xE8)
+[0413/224039.438:ERROR:file_io.cc(134)] WriteFile: Идет закрытие канала. (0xE8)
+[0413/230402.597:ERROR:file_io.cc(134)] WriteFile: Идет закрытие канала. (0xE8)

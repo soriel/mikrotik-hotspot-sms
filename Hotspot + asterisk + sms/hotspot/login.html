@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Авторизация</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="author" content="Alexander A Kusakin <alexander.a.kusakin@gmail.com>">
+    <meta name="author" content="IntegraSky - team@integrasky.ru">
 
     <link rel="stylesheet" href="./css/form.css">
     <link rel="stylesheet" href="./css/modal.css">
@@ -30,21 +30,21 @@
 
                 if (isValidPhoneNumber(jQuery(this).val())) {
                     jQuery('.login .btn.next').removeClass('disabled').addClass('active');
+
                     jQuery('#login_form').attr('action', '$(link-login-only)#' + document.getElementById('login').value.replace(/\+7/g, '').replace(/[\-\(\)]/g, ''));
                     //jQuery('#login_form').attr('action', '#' + document.getElementById('login').value.replace(/\+7/g, '').replace(/[\-\(\)]/g, ''));
-                    jQuery('#username1').val(document.getElementById('login').value.replace(/\+7/g, '').replace(/[\-\(\)]/g, ''));
+
+                    //jQuery('#username1').val(document.getElementById('login').value.replace(/\+7/g, '').replace(/[\-\(\)]/g, '') + document.getElementById('postfix').value);
+                    jQuery('#username1').val(document.getElementById('login').value.replace(/\+7/g, '').replace(/[\-\(\)]/g, '') + 'd');
                 } else {
                     jQuery('.login .btn.next').removeClass('active').addClass('disabled');
                 }
 
             });
 
-            /*CHANGE*/
-
             jQuery('#login2').mask('+7-(999)-999-99-99');
 
             jQuery('.already').on('keyup', '#login2', function (e) {
-
                 if (e.keyCode === 13) {
                     return jQuery('.already .btn.active').click();
                 }
@@ -54,13 +54,11 @@
                 }
 
             }).on('keyup', '#code2', function (e) {
-
                 if (event.keyCode === 13) {
                     return jQuery('.already .btn.active').click();
                 }
 
                 jQuery('#password2').val(hexMD5('$(chap-id)' + jQuery(this).val() + '$(chap-challenge)'));
-
 
             }).on('keyup', '#code2, #login2', function () {
 
@@ -73,7 +71,6 @@
                 }
 
             });
-            /*END_CHANGE*/
 
             jQuery('.btn').on('click', function (event) {
 
@@ -83,10 +80,10 @@
 
                     return false;
                 }
+
             });
 
             jQuery('#code').on('keyup', function (event) {
-
                 if (event.keyCode === 13) {
                     return jQuery('.code .btn.active').click();
                 }
@@ -107,80 +104,98 @@
                 });
             });
 
+            /*jQuery('#pass_remember').on('click', function () {
+                jQuery('form.code, form.already').fadeOut(500, function () {
+                    setTimeout(function () {
+                        jQuery('form.login').fadeIn()
+                    }, 500)
+                });
+                jQuery('#postfix').val('d');
+                jQuery('#text-phone').text('Напомнить пароль для номера:')
+            });*/
+
+
+            jQuery('#submit_code').on('click', function(e){
+                e.preventDefault();
+                var username = jQuery('#username2').val();
+                jQuery('form.code').attr('action', "?username=" + username + "#" + username).submit();
+            });
+
             if (!!window.location.hash) {
                 jQuery('#username2').val(window.location.hash.replace('#', ''));
                 jQuery('form.code').fadeIn();
             } else {
                 jQuery('form.login').fadeIn();
             }
+
         });
-
-    function Connect()
-    {
-        jQuery('#code').val(document.getElementById('username2').value);
-        jQuery('#password').val(hexMD5('$(chap-id)' + jQuery('#code').val() + '$(chap-challenge)'));
-        return jQuery('.code .btn.active').click();
-    }
-
     </script>
 </head>
 <body>
 <div class="container">
+<div>
     <div class="logo">
-        <img src="./img/integrasky.svg" alt="integrasky" width="200px" style="width:200px">
+        <img src="./img/integrasky.svg" alt="IntegraSky" width="350px" style="width:350px">
     </div>
+
     <!--<small class="form_description">Please log on to use the internet hotspot service</small>-->
+    <!--<input type="text" name="postfix" id="postfix" value="" hidden />-->
     <form class="form login" id="login_form" style="display: none" method="get" name="sendin"
           action="$(link-login-only)" method="post">
     <!--<form class="form login" id="login_form" style="display: none" method="get" name="sendin"
           action="" method="post">-->
-        <label for="login">Введите номер</label>
-        <br>
+        <p class='upper-label' id='text-phone'>Для подключения к бесплатному WiFi введите номер телефона</p>
+        <!--<p>Для подключения к бесплатному WiFi введите номер телефона</p>-->
+        <!--<label id="first_label" for="login">Для подключения к бесплатному WiFi введите номер телефона</label>-->
         <div class="input_group tel">
-            <img src="./img/number.svg" alt="number">
+            <img src="./img/phone.png" alt="number">
             <input type="hidden" name="username" id="username1">
-            <input type="text" id="login" placeholder="+7-(XXX)-XXX-XX-XX">
+            <input type="text" class='round-right-corner phone' id="login" placeholder="+7....">
         </div>
         <br>
-        <button class="btn next">
-            Далее
+        <button class="btn next disabled">
+            Отправить
         </button>
     </form>
 
     <form class="form code" style="display: none" name="sendin" action="" method="post">
-        <!--<label for="code">Введите код</label>-->
-        <label for="code">Для получения доступа необходимо позвонить на номер <a href="tel:84991111111">84991111111</a></label>
-        <br>
+        <p class="upper-label">Введите код из SMS-сообщения, которое пришло Вам на телефон</p>
         <div class="input_group">
+            <img src="./img/key.png" alt="number">
             <input type="hidden" name="username" id="username2">
             <input type="hidden" name="password" id="password">
-            <!--<input type="text" id="code" maxlength="16" placeholder="********">-->
-            <input type="hidden" id="code">
+            <input type="text" class='round-right-corner' id="code" maxlength="8">
         </div>
         <br>
-        <input type="submit" class="btn" value="Далее" onclick="Connect()" />
+        <input type="submit" id="submit_code" class="btn disabled" value="Далее">
     </form>
 
-    <!--<form class="form already" style="display: none" name="sendin" action="" method="post">
-        <label for="login2">Введите номер</label>
-        <br>
+    <form class="form already" style="display: none" name="sendin" action="" method="post">
+        <p class='upper-label'>Введите номер</p>
         <div class="input_group tel">
-            <input type="text" id="login2" placeholder="+7-(XXX)-XXX-XX-XX">
+            <img src="./img/phone.png" alt="number">
+            <input type="text" class='round-right-corner phone' id="login2" placeholder="+7....">
         </div>
-
-        <br>
+        <p class='upper-label'>Введите код</p>
         <div class="input_group">
+            <img src="./img/key.png" alt="number">
             <input type="hidden" name="username" id="username3">
             <input type="hidden" name="password" id="password2">
-            <input type="text" id="code2" maxlength="16" placeholder="********">
+            <input type="text" class='round-right-corner code' id="code2" maxlength="8">
         </div>
-        <br>
-        <input type="submit" class="btn" value="Далее"/>
-    </form>-->
+        <br />
+        <input type="submit" class="btn disabled" value="Отправить">
+    </form>
 
-    <br><br>
-    <a href="by_sms/login.html">Авторизация по SMS</a>
-    <a id="has_code" href="#">У меня уже есть код</a>
+    <br>
+    <!--<small>Powered by MikroTik RouterOS</small>-->
+
+    <div class="input_group bottom_btn_group">
+        <button class="bottom-btn round-corner redirect" onclick="window.location.href='by_call/login.html'">Авторизация<br />по звонку</button>
+        <button id="has_code" class="bottom-btn round-corner">У меня<br />есть код</button>
+    </div>
+    <!--<button id="pass_remember" class="bottom-btn round-corner">Напомнить пароль</button>-->
+
     <label id="modal_trigger" for="modal-trigger">Политика конфиденциальности</label>
 </div>
 <div class="modal">
@@ -263,6 +278,7 @@
             <p>© ООО "Компания", 2018</p>
         </div>
     </div>
+</div>
 </div>
 </body>
 </html>
