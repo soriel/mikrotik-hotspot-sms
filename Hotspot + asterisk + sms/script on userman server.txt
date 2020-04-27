@@ -1,162 +1,95 @@
-:foreach line in=[/log find buffer=userman message~"Reply-Message = \"user "] do={
+:local Lines { 0="" }
 
- :do {:local content [/log get $line message];
+:local LineI 1
 
-  :put $content;
+:foreach line in=[/log find buffer=userman3 message~"Reply-Message = \"user "] do={
 
+  :set ($Lines->"$LineI") [ /log get $line message ]
+
+  :set LineI ($LineI + 1)
+
+}
+
+/system logging action set userman3 memory-lines=1;
+
+delay 300ms
+
+/system logging action set userman3 memory-lines=1000;
+
+
+
+:foreach key,content in=$Lines do={
+ :set ($Lines->"$key") ""
+
+ :do {
+#  :put $content;
   :local pos1 [:find $content "<" 0];
-
-  :put $pos1;
-
+#  :put $pos1
   :if ($pos1 != " ") do={ 
-
    :local uname ""; 
-
    :local uname7 "";
-
    :local uname8 "";
-
    :local uname9 "";
-
    :local unameD "";
-
    :local phone ""; 
-
    :if ([:pick $content ($pos1+1)] = "9") do={ 
-
     :set uname [:pick $content ($pos1+1) ($pos1+11)];  
-
-    :put $uname;
-
+#    :put $uname;
     :set uname7 [:put ("7" . {$uname})]
-
     :set uname8 [:put ("8" . {$uname})]
-
     :set unameD [:pick $content ($pos1+11)];
-
-    :put $unameD 
-
+#    :put $unameD 
     #SendTest
 
-
-
-    :local sendtest yes;
-
+    :local sendtest true;
     :foreach i in=[/ip fi ad print as-value where list=sendsms] do={
-
     :if (($i->"address")=$uname7) do={
-
-    :set $sendtest no;
-
+    :set sendtest false;
+#    :put "sendtest=$sendtest";
      }
-
     }
 
-     #Password generation 
+    :local numberd [:pick $content ($pos1+11)];
+    #Add user to user-manager  
 
+    :if ($sendtest=true and $numberd = "d") do={ 
 
+      #Password generation 
 
     :local date [/system clock get time]; 
 
-
-
     :local hour [:pick $date 0 2]; 
-
-
 
     :local min [:pick $date 3 5]; 
 
-
-
     :local sec [:pick $date 6 8]; 
-
-
 
     :local usernumber [:pick $content ($pos1+5) ($pos1+7)];
 
-
-
-    :put $usernumber;
-
-
+#    :put $usernumber;
 
     :global pass 27394; 
 
-
-
     :set pass ($hour * $min * $sec - $usernumber); 
 
-
-
-    :if ($pass = 0) do={ 
-
-
+    :if ($pass <= 0) do={ 
 
      :set pass 6524;
 
-
-
      }
 
-
-
-    :put $pass;
-
-
+#    :put $pass;
 
     :local changepassword [:do {/tool user-manager user set password=$pass number=[find username=$uname]} on-error={}];
-
     :local timeoutsendsms [:do {/ip firewall address-list add list="sendsms" address="$uname7" timeout="3m"} on-error={}];
+    :local sendsms [:do {/tool fetch url="http://cab.websms.ru/http_in5.asp?http_username=USER&http_password=Pass&Phone_list=$uname7&Message=$pass" keep-result=no} on-error={}];
+    :local newuser [:do {/tool user-manager user add username=$uname password=$pass customer=admin copy-from=test disabled=no phone=$uname7} on-error={:do {($changepassword&&$timeoutsendsms&&$sendsms)} on-error={}}];
 
-    :local putpasschange [:put "PAASScange"]
+#    :put TRUE
 
-    :local putpassnew [:put "Pass New"]
-
-    :local sendsms [/tool fetch url="https://gate.smsaero.ru/send/\?user=USER@EMAIL&password=PASS&to=$uname7&text=$pass&from=MikroTik" keep-result=no];
-
-    :local newuser [:do {/tool user-manager user add username=$uname password=$pass customer=admin copy-from=test disabled=no phone=$uname7} on-error={}];   
-
-
-    #Add user to user-manager  
-
-
-
-    :if (($sendtest=yes)&&[:pick $content ($pos1+11)] != "d") do={ 
-
-    :do {($newuser&&$timeoutsendsms&&$sendsms)} on-error={};
-
-
-
-    }
-
-  
-
-     :if (($sendtest=yes)&&[:pick $content ($pos1+11)] = "d") do={
-
-
-
-     :do {($changepassword&&$timeoutsendsms&&$sendsms&&$putpasschange)} on-error={};
-
-        
-
+          }
          }
-
         }
-
-
-
        }
-
-
-
       }
 
-     }
-
-
-
-      /system logging action set userman memory-lines=1;
-
-      :delay 1
-
-      /system logging action set userman memory-lines=1000;
