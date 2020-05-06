@@ -1,8 +1,12 @@
+#You need install userman packedge from extra packetges and you need create log:
+#/system logging action add name=userman target=memory
+#/system logging add action=userman topics=manager
+
 :local Lines { 0="" }
 
 :local LineI 1
 
-:foreach line in=[/log find buffer=userman3 message~"Reply-Message = \"user "] do={
+:foreach line in=[/log find buffer=userman message~"Reply-Message = \"user "] do={
 
   :set ($Lines->"$LineI") [ /log get $line message ]
 
@@ -10,11 +14,11 @@
 
 }
 
-/system logging action set userman3 memory-lines=1;
+/system logging action set userman memory-lines=1;
 
 delay 300ms
 
-/system logging action set userman3 memory-lines=1000;
+/system logging action set userman memory-lines=1000;
 
 
 
