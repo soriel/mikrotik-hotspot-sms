@@ -2,6 +2,17 @@
 #/system logging action add name=userman target=memory
 #/system logging add action=userman topics=manager
 
+# User manager config and user profile limitation
+# Profile
+#/tool user-manager profile add name=guest name-for-users="" override-shared-users=5 owner=admin price=0 starts-at=logon validity=0s
+# Profile limit
+#/tool user-manager profile limitation add address-list="" download-limit=0B group-name="" ip-pool="" ip-pool6="" name=guest owner=admin rate-limit-burst-rx=5242880B rate-limit-burst-time-rx=16s rate-limit-burst-time-tx=16s rate-limit-burst-treshold-rx=2097152B rate-limit-burst-treshold-tx=2097152B rate-limit-burst-tx=5242880B rate-limit-min-rx=2097152B rate-limit-min-tx=2097152B rate-limit-priority=8 rate-limit-rx=2097152B rate-limit-tx=2097152B transfer-limit=0B upload-limit=0B uptime-limit=0s
+#User template
+#/tool user-manager user add customer=admin disabled=no ipv6-dns=:: password=PassWord123 shared-users=5 username=test wireless-enc-algo=none wireless-enc-key="" wireless-psk=""
+#Router add to usermanager change ip you router adn password for radius server
+#/tool user-manager router add coa-port=1700 customer=admin disabled=no ip-address=10.1.1.1 log=auth-ok,auth-fail,acct-ok,acct-fail name=cpe34 shared-secret=PassWord123 use-coa=no
+
+
 :local Lines { 0="" }
 
 :local LineI 1
