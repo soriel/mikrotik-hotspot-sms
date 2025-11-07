@@ -12,9 +12,7 @@
     <script src="./js/jquery-3.3.1.min.js"></script>
     <script src="./js/jquery.maskedinput.min.js"></script>
     <script type="text/javascript" src="/md5.js"></script>
-<!--    <script type="text/javascript" src="./md5.js"></script>-->
-
-    <script>
+<script>
         ///////////////// Phone validation and masking
         const phoneMask = '+7-(999)-999-99-99';
         const phonePattern = new RegExp(/^\s*(8|\+7)\s*-?\s*\(?[\d-]{3,6}\)?[\d-]{5,11}$/i);
@@ -22,7 +20,7 @@
 
         let _phone = '';
         let _code = '';
-        let _type = 'call';
+        let _type = 'call'; // <-- Значение по умолчанию
         let _form = 'login';
 
         function updatePhoneHandler(e) {
@@ -31,14 +29,8 @@
             const isValid = isValidPhoneNumber(_phone);
             const filtered = _phone.replace(/\+7/g, '').replace(/[\-()]/g, '')
 
-            const hashData = JSON.stringify({
-                phone: filtered,
-                form: (_type || 'call') === 'call' ? 'call' : 'code',
-                type: _type || 'call'
-            })
-
-            jQuery('#login_form').attr('action', `$(link-login-only)#${hashData}`);
-            jQuery('#username1').val(`${filtered}d`);
+            // Вызываем новую функцию для обновления username1
+            updatePrimaryUsername();
 
             jQuery('#username3').val(filtered);
 
@@ -51,7 +43,14 @@
 
         function updateType(type) {
             const speed = 200;
-            _type = type;
+
+            // --- ИСПРАВЛЕНИЕ ЗДЕСЬ ---
+            // Мы обновляем _type, только если нам передали новое значение.
+            // Иначе - используем значение по умолчанию ('call')
+            if (type !== undefined) {
+                _type = type;
+            }
+            // --- Конец исправления ---
 
             console.log('type', _type);
 
@@ -72,6 +71,9 @@
                     });
                     break;
             }
+            
+            // Вызываем нашу функцию при каждой смене типа
+            updatePrimaryUsername();
         }
 
         function updateForm(type) {
@@ -82,6 +84,31 @@
 
             jQuery(`form.${_form}`).fadeIn(speed);
         }
+
+        // --- Новая функция ---
+        // Эта функция централизованно обновляет поле username1
+        // в зависимости от выбранного типа (_type)
+        function updatePrimaryUsername() {
+            const filtered = _phone.replace(/\+7/g, '').replace(/[\-()]/g, '');
+
+            // Обновляем hashData, так как он тоже зависит от _type
+            const hashData = JSON.stringify({
+                phone: filtered,
+                form: (_type || 'call') === 'call' ? 'call' : 'code',
+                type: _type || 'call'
+            });
+            jQuery('#login_form').attr('action', `$(link-login-only)#${hashData}`);
+
+            // Главная логика:
+            // Проверяем текущий тип и устанавливаем правильное значение
+            if (_type === 'call') {
+                jQuery('#username1').val(`w${filtered}d`);
+            } else {
+                jQuery('#username1').val(`${filtered}d`);
+            }
+        }
+        // --- Конец новой функции ---
+
 
         /////////////////
 
@@ -178,7 +205,7 @@
                 updateType(data.type);
                 updateForm(data.form);
             } else {
-                updateType()
+                updateType() // <-- Здесь вызов без аргумента
                 updateForm()
             }
         })
